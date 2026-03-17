@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Search - Unwind</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <header>
+    <div></div>
+    <h1>🔎 Search Music</h1>
+    <button id="darkModeToggle" aria-label="Toggle dark mode">🌙</button>
+  </header>
+
+  <div class="container">
+    <aside>
+      <nav aria-label="Main navigation">
+        <ul>
+          <li><a href="index.html">🏠 Home</a></li>
+          <li><a href="search.html" aria-current="page">🔎 Search</a></li>
+          <li><a href="contact.html">📩 Contact</a></li>
+          <li><a href="login.html">🔐 Login</a></li>
+        </ul>
+      </nav>
+      
+      <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+        <h3 style="font-size: 14px; margin-bottom: 15px; opacity: 0.8;">Search Tips</h3>
+        <div style="font-size: 12px; line-height: 1.8; opacity: 0.9;">
+          <p>💡 Type to search instantly</p>
+          <p>🎵 Filter by category</p>
+          <p>❤️ Save your favorites</p>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <div class="search-wrapper">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search albums..."
+          class="search-input"
+          aria-label="Search albums"
+          autofocus
+        />
+      </div>
+
+      <div class="filter-container">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="favorites">❤️ Favorites</button>
+        <button class="filter-btn" data-filter="chill">Chill</button>
+        <button class="filter-btn" data-filter="upbeat">Upbeat</button>
+      </div>
+
+      <div class="album-grid" id="albumGrid">
+        <div class="album" data-category="chill">
+          <button class="favorite-btn" aria-label="Add to favorites">🤍</button>
+          <img src="th.jpg" alt="Chill Beats album cover" />
+          <p>Chill Beats</p>
+          <audio controls aria-label="Play Chill Beats" data-title="Chill Beats" data-img="th.jpg">
+            <source src="chill-beats-185843.mp3" type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+
+        <div class="album" data-category="upbeat">
+          <button class="favorite-btn" aria-label="Add to favorites">🤍</button>
+          <img src="t.jpg" alt="Top Hits album cover" />
+          <p>Top Hits</p>
+          <audio controls aria-label="Play Top Hits" data-title="Top Hits" data-img="t.jpg">
+            <source src="coffee-chill-out-15283.mp3" type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+
+        <div class="album" data-category="upbeat">
+          <button class="favorite-btn" aria-label="Add to favorites">🤍</button>
+          <img src="w.jpg" alt="Workout Mix album cover" />
+          <p>Workout Mix</p>
+          <audio controls aria-label="Play Workout Mix" data-title="Workout Mix" data-img="w.jpg">
+            <source src="bollywood-song-313044.mp3" type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+
+        <div class="album" data-category="chill">
+          <button class="favorite-btn" aria-label="Add to favorites">🤍</button>
+          <img src="l.jpg" alt="Lo-fi Vibes album cover" />
+          <p>Lo-fi Vibes</p>
+          <audio controls aria-label="Play Lo-fi Vibes" data-title="Lo-fi Vibes" data-img="l.jpg">
+            <source src="love-letter-312044.mp3" type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Now Playing Bar -->
+  <div class="now-playing-bar" id="nowPlayingBar">
+    <div class="now-playing-info">
+      <img id="nowPlayingImg" src="" alt="Now playing">
+      <div class="now-playing-text">
+        <h4 id="nowPlayingTitle">No song playing</h4>
+        <p>Unwind Music</p>
+      </div>
+    </div>
+    <div class="volume-control">
+      <span>🔊</span>
+      <input type="range" id="volumeSlider" min="0" max="100" value="70" aria-label="Volume control">
+    </div>
+  </div>
+
+  <script src="h.js"></script>
+  <script>
+    // Dark mode toggle
+    const darkModeToggle = document.getElementById("darkModeToggle");
+    
+    if (localStorage.getItem("darkMode") === "enabled") {
+      document.body.classList.add("dark");
+      darkModeToggle.textContent = "☀️";
+    }
+    
+    darkModeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      
+      if (document.body.classList.contains("dark")) {
+        darkModeToggle.textContent = "☀️";
+        darkModeToggle.setAttribute("aria-label", "Switch to light mode");
+        localStorage.setItem("darkMode", "enabled");
+      } else {
+        darkModeToggle.textContent = "🌙";
+        darkModeToggle.setAttribute("aria-label", "Switch to dark mode");
+        localStorage.setItem("darkMode", "disabled");
+      }
+    });
+
+    // Favorites functionality
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    
+    document.querySelectorAll(".favorite-btn").forEach((btn, index) => {
+      if (favorites.includes(index)) {
+        btn.textContent = "❤️";
+        btn.classList.add("favorited");
+      }
+      
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isFavorited = favorites.includes(index);
+        
+        if (isFavorited) {
+          favorites = favorites.filter(f => f !== index);
+          btn.textContent = "🤍";
+          btn.classList.remove("favorited");
+        } else {
+          favorites.push(index);
+          btn.textContent = "❤️";
+          btn.classList.add("favorited");
+        }
+        
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+      });
+    });
+
+    // Filter functionality
+    const filterBtns = document.querySelectorAll(".filter-btn");
+    const albums = document.querySelectorAll(".album");
+    
+    filterBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        filterBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        
+        const filter = btn.dataset.filter;
+        
+        albums.forEach((album, index) => {
+          if (filter === "all") {
+            album.style.display = "flex";
+          } else if (filter === "favorites") {
+            album.style.display = favorites.includes(index) ? "flex" : "none";
+          } else {
+            album.style.display = album.dataset.category === filter ? "flex" : "none";
+          }
+        });
+      });
+    });
+
+    // Now Playing Bar
+    const audios = document.querySelectorAll("audio");
+    const nowPlayingBar = document.getElementById("nowPlayingBar");
+    const nowPlayingTitle = document.getElementById("nowPlayingTitle");
+    const nowPlayingImg = document.getElementById("nowPlayingImg");
+    const volumeSlider = document.getElementById("volumeSlider");
+    
+    audios.forEach((audio, index) => {
+      audio.volume = volumeSlider.value / 100;
+      
+      audio.addEventListener("play", () => {
+        nowPlayingBar.classList.add("active");
+        nowPlayingTitle.textContent = audio.dataset.title;
+        nowPlayingImg.src = audio.dataset.img;
+        albums[index].classList.add("playing");
+      });
+      
+      audio.addEventListener("pause", () => {
+        albums[index].classList.remove("playing");
+      });
+      
+      audio.addEventListener("ended", () => {
+        albums[index].classList.remove("playing");
+      });
+    });
+    
+    // Volume control
+    volumeSlider.addEventListener("input", (e) => {
+      const volume = e.target.value / 100;
+      audios.forEach(audio => {
+        audio.volume = volume;
+      });
+      localStorage.setItem("volume", e.target.value);
+    });
+    
+    const savedVolume = localStorage.getItem("volume");
+    if (savedVolume) {
+      volumeSlider.value = savedVolume;
+      audios.forEach(audio => {
+        audio.volume = savedVolume / 100;
+      });
+    }
+  </script>
+</body>
+</html>

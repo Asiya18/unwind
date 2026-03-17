@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In - Unwind</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0077be, #001a2e);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .signin-container {
+      background: #fff;
+      color: #000;
+      padding: 40px;
+      border-radius: 15px;
+      width: 100%;
+      max-width: 350px;
+      box-shadow: 0 6px 15px rgba(0, 119, 190, 0.3);
+      text-align: center;
+    }
+
+    .signin-container h2 {
+      margin-bottom: 20px;
+      color: #0077be;
+    }
+
+    .signin-container input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      font-size: 16px;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .signin-container input:focus {
+      border-color: #0077be;
+      box-shadow: 0 0 5px rgba(0, 180, 255, 0.5);
+    }
+
+    .signin-container button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #0077be, #005a8d);
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: 0.3s;
+    }
+
+    .signin-container button:hover {
+      background: linear-gradient(135deg, #0096e6, #0077be);
+    }
+
+    .signin-container p {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .signin-container a {
+      color: #0077be;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .signin-container a:hover {
+      text-decoration: underline;
+    }
+
+    #signinMessage {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="signin-container">
+    <h2>Sign In 🎵</h2>
+    <form id="signinForm" novalidate>
+      <input 
+        type="email" 
+        id="signinEmail"
+        placeholder="Email" 
+        required
+        aria-label="Email address"
+        autocomplete="email"
+      >
+      <input 
+        type="password" 
+        id="signinPassword"
+        placeholder="Password" 
+        required
+        aria-label="Password"
+        autocomplete="current-password"
+        minlength="6"
+      >
+      <button type="submit">Sign In</button>
+    </form>
+    <p id="signinMessage" role="alert" aria-live="polite"></p>
+    <p>Don't have an account? <a href="#">Sign Up</a></p>
+    <p><a href="index.html">⬅ Back to Home</a></p>
+  </div>
+
+  <script>
+    const form = document.getElementById("signinForm");
+    const message = document.getElementById("signinMessage");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById("signinEmail").value.trim();
+      const password = document.getElementById("signinPassword").value;
+      
+      // Validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        message.textContent = "❌ Please enter a valid email address";
+        message.style.color = "red";
+        return;
+      }
+      
+      if (password.length < 6) {
+        message.textContent = "❌ Password must be at least 6 characters";
+        message.style.color = "red";
+        return;
+      }
+      
+      // Success (demo only)
+      message.textContent = "✅ Sign in successful! Redirecting...";
+      message.style.color = "green";
+      
+      sessionStorage.setItem("isLoggedIn", "true");
+      sessionStorage.setItem("userEmail", email);
+      
+      setTimeout(() => window.location.href = "index.html", 1500);
+    });
+  </script>
+</body>
+</html>
